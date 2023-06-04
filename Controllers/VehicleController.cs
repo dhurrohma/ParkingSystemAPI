@@ -72,8 +72,8 @@ public class VehicleController : ControllerBase
         return Ok(parkingHistories);
     }
 
-    [HttpPut("parking-histories/{vehicleId}")]
-    public IActionResult UpdateParkingHistory(int vehicleId, DateTime checkOutTime)
+    [HttpPut("parking-histories/{vehicleId}/{checkOutTime}")]
+    public IActionResult UpdateParkingHistory(int vehicleId, DateTimeOffset checkOutTime)
     {
         var vehicle = _dbContext.Vehicles
             .Include(v => v.ParkingHistories)
@@ -91,11 +91,11 @@ public class VehicleController : ControllerBase
             return NotFound();
         }
 
-        parkingHistory.CheckOutTime = checkOutTime;
+        parkingHistory.CheckOutTime = checkOutTime.UtcDateTime;
 
         _dbContext.SaveChanges();
 
-        return NoContent();
+        return Ok(checkOutTime);
     }
 
     [HttpDelete("{id}")]
