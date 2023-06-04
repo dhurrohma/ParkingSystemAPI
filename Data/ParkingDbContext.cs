@@ -11,6 +11,7 @@ namespace ParkingSystemApi.Data
         public DbSet<VehicleType> VehicleTypes { get; set; }
 
         public ParkingDbContext(DbContextOptions<ParkingDbContext> options)
+            : base(options)
         {
         }
 
@@ -21,12 +22,20 @@ namespace ParkingSystemApi.Data
             modelBuilder.Entity<Vehicle>()
                 .HasOne(v => v.Owner)
                 .WithOne(o => o.Vehicle)
-                .HasForeignKey<Owner>(o => o.VehicleId);
+                .HasForeignKey<Owner>(o => o.VehicleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // modelBuilder.Entity<Owner>()
+            //     .HasOne(o => o.Vehicle)
+            //     .WithOne(v => v.Owner)
+            //     .HasForeignKey<Vehicle>(v => v.OwnerId)
+            //     .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ParkingHistory>()
                 .HasOne(ph => ph.Vehicle)
                 .WithMany(v => v.ParkingHistories)
-                .HasForeignKey(ph => ph.VehicleId);
+                .HasForeignKey(ph => ph.VehicleId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Vehicle>()
                 .HasMany(v => v.VehicleTypes)
@@ -50,6 +59,21 @@ namespace ParkingSystemApi.Data
                         j.HasKey("VehicleId", "VehicleTypeId");
                         j.HasIndex("VehicleTypeId").IsUnique(false);
                 });
+            
+            modelBuilder.Entity<ParkingHistory>()
+                .Property(ph => ph.CheckInTime)
+                .HasColumnType("timestamptz")
+                .IsRequired()
+                .HasConversion(
+                    v => v.UtcDateTime,
+                    v => new DateTimeOffset(v, TimeSpan.Zero));
+
+            modelBuilder.Entity<ParkingHistory>()
+                .Property(ph => ph.CheckOutTime)
+                .HasColumnType("timestamptz")
+                .HasConversion(
+                    v => v.HasValue ? v.Value.UtcDateTime : (DateTime?)null,
+                    v => v.HasValue ? new DateTimeOffset(v.Value, TimeSpan.Zero) : (DateTimeOffset?)null);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ParkingSystemApi.Data;
@@ -11,9 +12,10 @@ using ParkingSystemApi.Data;
 namespace ParkingSystemApi.Migrations
 {
     [DbContext(typeof(ParkingDbContext))]
-    partial class ParkingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230604020304_restart")]
+    partial class restart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,8 +136,7 @@ namespace ParkingSystemApi.Migrations
                 {
                     b.HasOne("ParkingSystemApi.Models.Vehicle", "Vehicle")
                         .WithOne("Owner")
-                        .HasForeignKey("ParkingSystemApi.Models.Owner", "VehicleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ParkingSystemApi.Models.Owner", "VehicleId");
 
                     b.Navigation("Vehicle");
                 });
@@ -144,8 +145,7 @@ namespace ParkingSystemApi.Migrations
                 {
                     b.HasOne("ParkingSystemApi.Models.Vehicle", "Vehicle")
                         .WithMany("ParkingHistories")
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("VehicleId");
 
                     b.Navigation("Vehicle");
                 });

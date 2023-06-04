@@ -19,7 +19,11 @@ namespace ParkingSystemApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                });
 
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ParkingDbContext>(options =>
@@ -27,9 +31,20 @@ namespace ParkingSystemApi
 
             // Add other services and dependencies
             // services.AddScoped<IYourService, YourService>();
-            services.AddDbContext<ParkingDbContext>();
-            services.AddControllers();
 
+            // using (var serviceProvider = services.BuildServiceProvider())
+            // {
+            //     using (var scope = serviceProvider.CreateScope())
+            //     {
+            //         var dbContext = scope.ServiceProvider.GetRequiredService<ParkingDbContext>();
+
+            //         // Create the database
+            //         dbContext.Database.Migrate();
+
+            //         // Drop the database (optional)
+            //         dbContext.Database.EnsureDeleted();
+            //     }
+            // }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -56,6 +71,5 @@ namespace ParkingSystemApi
                 endpoints.MapControllers();
             });
         }
-
     }
 }
