@@ -25,12 +25,6 @@ namespace ParkingSystemApi.Data
                 .HasForeignKey<Owner>(o => o.VehicleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // modelBuilder.Entity<Owner>()
-            //     .HasOne(o => o.Vehicle)
-            //     .WithOne(v => v.Owner)
-            //     .HasForeignKey<Vehicle>(v => v.OwnerId)
-            //     .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<ParkingHistory>()
                 .HasOne(ph => ph.Vehicle)
                 .WithMany(v => v.ParkingHistories)

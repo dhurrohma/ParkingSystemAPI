@@ -51,17 +51,23 @@ public class VehicleController : ControllerBase
         return CreatedAtAction(nameof(GetVehicleById), new { id = vehicle.Id }, vehicle);
     }
 
-    [HttpGet("owners")]
-    public IActionResult GetOwners()
+    [HttpGet("owners/{name}")]
+    public IActionResult GetOwners(string name)
     {
-        var owners = _dbContext.Owners.ToList();
+        var owners = _dbContext.Owners
+            .Include(o => o.Vehicle)
+            .Where(o => o.Name.Contains(name))
+            .ToList();
         return Ok(owners);
     }
 
-    [HttpGet("vehicle-types")]
-    public IActionResult GetVehicleTypes()
+    [HttpGet("vehicle-types/{type}")]
+    public IActionResult GetVehicleTypes(string type)
     {
-        var vehicleTypes = _dbContext.VehicleTypes.ToList();
+        var vehicleTypes = _dbContext.VehicleTypes
+            .Include(t => t.Vehicles)
+            .Where(t => t.Name.Contains(type))
+            .ToList();
         return Ok(vehicleTypes);
     }
 

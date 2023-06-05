@@ -29,9 +29,6 @@ namespace ParkingSystemApi
             services.AddDbContext<ParkingDbContext>(options =>
                 options.UseNpgsql(connectionString));
 
-            // Add other services and dependencies
-            // services.AddScoped<IYourService, YourService>();
-
             // using (var serviceProvider = services.BuildServiceProvider())
             // {
             //     using (var scope = serviceProvider.CreateScope())
