@@ -27,9 +27,19 @@ namespace ParkingSystemApi.Service
             return _ownerRepository.GetAllOwners();
         }
 
+        public List<Owner> GetOwnerByAddress(string address)
+        {
+            return _ownerRepository.GetOwnerByAddress(address);
+        }
+
         public Owner GetOwnerById(int id)
         {
             return _ownerRepository.GetOwnerById(id);
+        }
+
+        public List<Owner> GetOwnerByName(string name)
+        {
+            return _ownerRepository.GetOwnerByName(name);
         }
 
         public String UpdateOwner(int id, Owner owner)

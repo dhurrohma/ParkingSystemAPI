@@ -34,6 +34,30 @@ namespace ParkingSystemApi.Controllers
             return Ok(owner);
         }
 
+        [HttpGet("name")]
+        public IActionResult GetOwnerByName([FromQuery] string name)
+        {
+            var owner = _ownerService.GetOwnerByName(name);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(owner);
+        }
+
+        [HttpGet("address")]
+        public IActionResult GetOwnerByAddress([FromQuery] string address)
+        {
+            var owner = _ownerService.GetOwnerByAddress(address);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(owner);
+        }
+
         [HttpPost("add")]
         public IActionResult CreateOwner(Owner owner)
         {

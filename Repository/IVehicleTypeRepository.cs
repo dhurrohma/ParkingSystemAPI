@@ -9,5 +9,6 @@ namespace ParkingSystemApi.Repository
         VehicleType AddVehicleType(VehicleType vehicleType);
         String UpdateVehicleType(int id, String name);
         VehicleType DeleteVehicleType(int id);
+        List<VehicleType> GetVehicleTypeByName(String name);
     }
 }

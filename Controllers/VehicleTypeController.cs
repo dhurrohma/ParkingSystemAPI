@@ -33,6 +33,17 @@ namespace ParkingSystemApi.Controllers
             return Ok(vehicleType);
         }
 
+        [HttpGet("name")]
+        public IActionResult GetVehicleTypeByName([FromQuery] String name)
+        {
+            var vehicleType = _vehicleTypeService.GetVehicleTypeByName(name);
+            if(vehicleType == null)
+            {
+                return NotFound();
+            }
+            return Ok(vehicleType);
+        }        
+
         [HttpPost("add")]
         public IActionResult CreateVehicleType(VehicleType vehicleType)
         {

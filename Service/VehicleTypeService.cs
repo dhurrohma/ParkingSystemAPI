@@ -33,6 +33,11 @@ namespace ParkingSystemApi.Service
             return _vehicleTypeRepository.GetVehicleTypeById(id);
         }
 
+        public List<VehicleType> GetVehicleTypeByName(string name)
+        {
+            return _vehicleTypeRepository.GetVehicleTypeByName(name);
+        }
+
         public String UpdateVehicleType(int id, String name)
         {
             return _vehicleTypeRepository.UpdateVehicleType(id, name);

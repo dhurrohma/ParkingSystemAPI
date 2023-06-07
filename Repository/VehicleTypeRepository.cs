@@ -36,15 +36,23 @@ namespace ParkingSystemApi.Repository
         public List<VehicleType> GetAllVehicleTypes()
         {
             return _dbContext.vehicle_types
-                    .Include(v => v.Vehicles)
+                    .Include(vt => vt.Vehicles)
                     .ToList();
         }
 
         public VehicleType GetVehicleTypeById(int id)
         {
             return _dbContext.vehicle_types
-                    .Include(v => v.Vehicles)
+                    .Include(vt => vt.Vehicles)
                     .FirstOrDefault(vt => vt.Id == id);
+        }
+
+        public List<VehicleType> GetVehicleTypeByName(string name)
+        {
+            return _dbContext.vehicle_types
+                    .Include(vt => vt.Vehicles)
+                    .Where(vt => vt.Name.Contains(name))
+                    .ToList();
         }
 
         public String UpdateVehicleType(int id, String name)

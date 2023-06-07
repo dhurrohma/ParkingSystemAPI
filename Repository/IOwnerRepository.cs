@@ -9,5 +9,7 @@ namespace ParkingSystemApi.Repository
         Owner AddOwner(Owner owner);
         String UpdateOwner(int id, Owner owner);
         Owner DeleteOwner(int id);
+        List<Owner> GetOwnerByName(String name);
+        List<Owner> GetOwnerByAddress(String address);
     }
 }
