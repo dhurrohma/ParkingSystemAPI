@@ -42,7 +42,9 @@ namespace ParkingSystemApi.Repository
 
         public ParkingHistory GetParkingHistoryById(int id)
         {
-            return _dbContext.parking_histories.FirstOrDefault(ph => ph.Id == id);
+            return _dbContext.parking_histories
+                    .Include(p => p.Vehicle)
+                    .FirstOrDefault(ph => ph.Id == id);
         }
 
         public ParkingHistory UpdateParkingHistory(ParkingHistory parkingHistory)
