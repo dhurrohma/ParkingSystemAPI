@@ -1,119 +1,102 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ParkingSystemApi.Data;
 using ParkingSystemApi.Models;
-using System.Linq;
+using ParkingSystemApi.Service;
 
-namespace ParkingSystemApi.Controllers;
-
-[ApiController]
-[Route("api/vehicles")]
-public class VehicleController : ControllerBase
+namespace ParkingSystemApi.Controllers
 {
-    private readonly ParkingDbContext _dbContext;
-
-    public VehicleController(ParkingDbContext dbContext)
+    [ApiController]
+    [Route("api/vehicles")]
+    public class VehicleController : ControllerBase
     {
-        _dbContext = dbContext;
-    }
+        private readonly IVehicleService _vehicleService;
+        private readonly IOwnerService _ownerService;
+        private readonly IVehicleTypeService _vehicleTypeSerive;
 
-    [HttpGet]
-    public IActionResult GetVehicles()
-    {
-        var vehicles = _dbContext.Vehicles
-            .Include(v => v.Owner)
-            .Include(v => v.VehicleTypes)
-            .Include(v => v.ParkingHistories)
-            .ToList();
-        return Ok(vehicles);
-    }
-
-    [HttpGet("{id}")]
-    public IActionResult GetVehicleById(int id)
-    {
-        var vehicle = _dbContext.Vehicles
-            .Include(v => v.Owner)
-            .Include(v => v.VehicleTypes)
-            .Include(v => v.ParkingHistories)
-            .FirstOrDefault(v => v.Id == id);
-        if (vehicle == null)
+        public VehicleController(IVehicleService vehicleService, IOwnerService ownerService, IVehicleTypeService vehicleTypeService)
         {
-            return NotFound();
-        }
-        return Ok(vehicle);
-    }
-
-    [HttpPost]
-    public IActionResult CreateVehicle(Vehicle vehicle)
-    {
-        _dbContext.Vehicles.Add(vehicle);
-        _dbContext.SaveChanges();
-        return CreatedAtAction(nameof(GetVehicleById), new { id = vehicle.Id }, vehicle);
-    }
-
-    [HttpGet("owners/{name}")]
-    public IActionResult GetOwners(string name)
-    {
-        var owners = _dbContext.Owners
-            .Include(o => o.Vehicle)
-            .Where(o => o.Name.Contains(name))
-            .ToList();
-        return Ok(owners);
-    }
-
-    [HttpGet("vehicle-types/{type}")]
-    public IActionResult GetVehicleTypes(string type)
-    {
-        var vehicleTypes = _dbContext.VehicleTypes
-            .Include(t => t.Vehicles)
-            .Where(t => t.Name.Contains(type))
-            .ToList();
-        return Ok(vehicleTypes);
-    }
-
-    [HttpGet("parking-histories")]
-    public IActionResult GetParkingHistories()
-    {
-        var parkingHistories = _dbContext.ParkingHistories.ToList();
-        return Ok(parkingHistories);
-    }
-
-    [HttpPut("parking-histories/{vehicleId}/{checkOutTime}")]
-    public IActionResult UpdateParkingHistory(int vehicleId, DateTimeOffset checkOutTime)
-    {
-        var vehicle = _dbContext.Vehicles
-            .Include(v => v.ParkingHistories)
-            .FirstOrDefault(v => v.Id == vehicleId);
-
-        if (vehicle == null)
-        {
-            return NotFound();
+            _vehicleService = vehicleService;
+            _ownerService = ownerService;
+            _vehicleTypeSerive = vehicleTypeService;
         }
 
-        var parkingHistory = vehicle.ParkingHistories.LastOrDefault();
-
-        if (parkingHistory == null)
+        [HttpGet]
+        public IActionResult GetVehicles()
         {
-            return NotFound();
+            var vehicles = _vehicleService.GetAllVehicles();
+            return Ok(vehicles);
         }
 
-        parkingHistory.CheckOutTime = checkOutTime.UtcDateTime;
-
-        _dbContext.SaveChanges();
-
-        return Ok(checkOutTime);
-    }
-
-    [HttpDelete("{id}")]
-    public IActionResult DeleteVehicle(int id)
-    {
-        var vehicle = _dbContext.Vehicles.FirstOrDefault(v => v.Id == id);
-        if (vehicle == null)
+        [HttpGet("{id}")]
+        public IActionResult GetVehicleById(int id)
         {
-            return NotFound();
+            var vehicle = _vehicleService.GetVehicleById(id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return Ok(vehicle);
         }
-        _dbContext.Vehicles.Remove(vehicle);
-        _dbContext.SaveChanges();
-        return NoContent();
+
+        [HttpPost("add")]
+        public IActionResult CreateVehicle(Vehicle vehicle)
+        {
+            var findOwner = _ownerService.GetOwnerById(vehicle.OwnerId);
+            if (findOwner == null)
+            {
+                return BadRequest();
+            }
+
+            var findVehicleType = _vehicleTypeSerive.GetVehicleTypeById(vehicle.VehicleTypeId);
+            if (findVehicleType == null)
+            {
+                return BadRequest();
+            }
+
+            vehicle.Owner = findOwner;
+            vehicle.VehicleType = findVehicleType;
+            var createdVehicle = _vehicleService.CreateVehicle(vehicle);
+            return CreatedAtAction(nameof(GetVehicleById), new { id = createdVehicle.Id }, createdVehicle);
+        }
+
+        [HttpPut("update/{id}")]
+        public IActionResult UpdateVehicle(int id, Vehicle vehicle)
+        {
+            var findVehicle = GetVehicleById(id);
+            if (findVehicle == null)
+            {
+                return NotFound();
+            }
+
+            var findOwner = _ownerService.GetOwnerById(vehicle.OwnerId);
+            if (findOwner == null)
+            {
+                return BadRequest();
+            }
+
+            var findVehicleType = _vehicleTypeSerive.GetVehicleTypeById(vehicle.VehicleTypeId);
+            if (findVehicleType == null)
+            {
+                return BadRequest();
+            }
+
+            vehicle.Owner = findOwner;
+            vehicle.VehicleType = findVehicleType;
+            var updatedVehicle = _vehicleService.UpdateVehicle(id, vehicle);
+        
+            return Ok(updatedVehicle);
+        }
+
+        [HttpDelete("delete/{id}")]
+        public IActionResult DeleteVehicle(int id)
+        {
+            var deletedVehicle = _vehicleService.DeleteVehicle(id);
+            if (deletedVehicle == null)
+            {
+                return NotFound();
+            }
+            return Ok("Success delete vehicle "+id);
+        }
     }
+
 }
+

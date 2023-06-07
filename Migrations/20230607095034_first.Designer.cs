@@ -12,8 +12,8 @@ using ParkingSystemApi.Data;
 namespace ParkingSystemApi.Migrations
 {
     [DbContext(typeof(ParkingDbContext))]
-    [Migration("20230604020304_restart")]
-    partial class restart
+    [Migration("20230607095034_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,15 +40,9 @@ namespace ParkingSystemApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("VehicleId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("VehicleId")
-                        .IsUnique();
-
-                    b.ToTable("Owners");
+                    b.ToTable("owners");
                 });
 
             modelBuilder.Entity("ParkingSystemApi.Models.ParkingHistory", b =>
@@ -60,19 +54,19 @@ namespace ParkingSystemApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CheckInTime")
-                        .HasColumnType("timestamptz");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("CheckOutTime")
-                        .HasColumnType("timestamptz");
+                    b.Property<DateTime>("CheckOutTime")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("VehicleId")
+                    b.Property<int>("VehicleId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("VehicleId");
 
-                    b.ToTable("ParkingHistories");
+                    b.ToTable("parking_histories");
                 });
 
             modelBuilder.Entity("ParkingSystemApi.Models.Vehicle", b =>
@@ -87,6 +81,9 @@ namespace ParkingSystemApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PlatNumber")
                         .IsRequired()
                         .HasColumnType("text");
@@ -95,9 +92,16 @@ namespace ParkingSystemApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("VehicleTypeId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Vehicles");
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("VehicleTypeId");
+
+                    b.ToTable("vehicles");
                 });
 
             modelBuilder.Entity("ParkingSystemApi.Models.VehicleType", b =>
@@ -114,65 +118,52 @@ namespace ParkingSystemApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VehicleTypes");
-                });
-
-            modelBuilder.Entity("VehicleVehicleType", b =>
-                {
-                    b.Property<int>("VehicleId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("VehicleTypeId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("VehicleId", "VehicleTypeId");
-
-                    b.HasIndex("VehicleTypeId");
-
-                    b.ToTable("VehicleVehicleType");
-                });
-
-            modelBuilder.Entity("ParkingSystemApi.Models.Owner", b =>
-                {
-                    b.HasOne("ParkingSystemApi.Models.Vehicle", "Vehicle")
-                        .WithOne("Owner")
-                        .HasForeignKey("ParkingSystemApi.Models.Owner", "VehicleId");
-
-                    b.Navigation("Vehicle");
+                    b.ToTable("vehicle_types");
                 });
 
             modelBuilder.Entity("ParkingSystemApi.Models.ParkingHistory", b =>
                 {
                     b.HasOne("ParkingSystemApi.Models.Vehicle", "Vehicle")
                         .WithMany("ParkingHistories")
-                        .HasForeignKey("VehicleId");
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Vehicle");
                 });
 
-            modelBuilder.Entity("VehicleVehicleType", b =>
+            modelBuilder.Entity("ParkingSystemApi.Models.Vehicle", b =>
                 {
-                    b.HasOne("ParkingSystemApi.Models.Vehicle", null)
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
+                    b.HasOne("ParkingSystemApi.Models.Owner", "Owner")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_VehicleVehicleType_Vehicles_VehicleId");
+                        .IsRequired();
 
-                    b.HasOne("ParkingSystemApi.Models.VehicleType", null)
-                        .WithMany()
+                    b.HasOne("ParkingSystemApi.Models.VehicleType", "VehicleType")
+                        .WithMany("Vehicles")
                         .HasForeignKey("VehicleTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_VehicaleVehicaleType_VehicleTypes_VehicleTypeId");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("VehicleType");
+                });
+
+            modelBuilder.Entity("ParkingSystemApi.Models.Owner", b =>
+                {
+                    b.Navigation("Vehicles");
                 });
 
             modelBuilder.Entity("ParkingSystemApi.Models.Vehicle", b =>
                 {
-                    b.Navigation("Owner")
-                        .IsRequired();
-
                     b.Navigation("ParkingHistories");
+                });
+
+            modelBuilder.Entity("ParkingSystemApi.Models.VehicleType", b =>
+                {
+                    b.Navigation("Vehicles");
                 });
 #pragma warning restore 612, 618
         }

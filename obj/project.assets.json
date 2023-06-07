@@ -928,11 +928,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/user/Desktop/dotnet/ParkingSystemApi/ParkingSystemApi.csproj",
+      "projectUniqueName": "/home/user/Desktop/dotnet/ParkingSystemApi (copy)/ParkingSystemApi.csproj",
       "projectName": "ParkingSystemApi",
-      "projectPath": "/home/user/Desktop/dotnet/ParkingSystemApi/ParkingSystemApi.csproj",
+      "projectPath": "/home/user/Desktop/dotnet/ParkingSystemApi (copy)/ParkingSystemApi.csproj",
       "packagesPath": "/home/user/.nuget/packages/",
-      "outputPath": "/home/user/Desktop/dotnet/ParkingSystemApi/obj/",
+      "outputPath": "/home/user/Desktop/dotnet/ParkingSystemApi (copy)/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/user/.nuget/NuGet/NuGet.Config"

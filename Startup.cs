@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ParkingSystemApi.Data;
+using ParkingSystemApi.Repository;
+using ParkingSystemApi.Service;
 
 namespace ParkingSystemApi
 {
@@ -26,8 +28,19 @@ namespace ParkingSystemApi
                 });
 
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
+
             services.AddDbContext<ParkingDbContext>(options =>
                 options.UseNpgsql(connectionString));
+
+            services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<IVehicleTypeRepository, VehicleTypeRepository>();
+            services.AddScoped<IOwnerRepository, OwnerRepository>();
+            services.AddScoped<IParkingHistoryRepository, ParkingHistoryRepository>();
+
+            services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<IVehicleTypeService, VehicleTypeService>();
+            services.AddScoped<IOwnerService, OwnerService>();
+            services.AddScoped<IParkingHistoryService, ParkingHistoryService>();
 
             // using (var serviceProvider = services.BuildServiceProvider())
             // {
