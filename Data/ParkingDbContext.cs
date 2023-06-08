@@ -55,7 +55,7 @@ namespace ParkingSystemApi.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=parking-testing;Username=postgres;Password=28April1998");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=parking-system;Username=postgres;Password=28April1998");
         }
     }
 }

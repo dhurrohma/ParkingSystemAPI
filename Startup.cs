@@ -42,19 +42,6 @@ namespace ParkingSystemApi
             services.AddScoped<IOwnerService, OwnerService>();
             services.AddScoped<IParkingHistoryService, ParkingHistoryService>();
 
-            // using (var serviceProvider = services.BuildServiceProvider())
-            // {
-            //     using (var scope = serviceProvider.CreateScope())
-            //     {
-            //         var dbContext = scope.ServiceProvider.GetRequiredService<ParkingDbContext>();
-
-            //         // Create the database
-            //         dbContext.Database.Migrate();
-
-            //         // Drop the database (optional)
-            //         dbContext.Database.EnsureDeleted();
-            //     }
-            // }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
