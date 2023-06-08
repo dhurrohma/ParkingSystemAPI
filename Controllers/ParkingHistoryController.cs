@@ -34,6 +34,42 @@ namespace ParkingSystemApi.Controllers
             return Ok(parkingHistory);
         }
 
+        [HttpGet("vehicle/{vehicleId}")]
+        public IActionResult GetParkingHistoryByVehicle(int vehicleId)
+        {
+            var parkingHistories = _parkingHistoryService.GetParkingHistoryByVehicleId(vehicleId);
+            if (parkingHistories == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(parkingHistories);
+        }        
+
+        [HttpGet("checkInTime")]
+        public IActionResult GetParkingHistoryByCheckInTime([FromQuery] DateTime start, [FromQuery] DateTime end)
+        {
+            var parkingHistories = _parkingHistoryService.GetParkingHistoryByCheckInTime(start, end);
+            if (parkingHistories == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(parkingHistories);
+        }
+
+        [HttpGet("checkOutTime")]
+        public IActionResult GetParkingHistoryByCheckOutTime([FromQuery] DateTime start, [FromQuery] DateTime end)
+        {
+            var parkingHistories = _parkingHistoryService.GetParkingHistoryByCheckOutTime(start, end);
+            if (parkingHistories == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(parkingHistories);
+        }
+
         [HttpPost("checkin")]
         public IActionResult CheckIn(ParkingHistory parkingHistory)
         {

@@ -40,11 +40,35 @@ namespace ParkingSystemApi.Repository
                         .ToList();
         }
 
+        public List<ParkingHistory> GetParkingHistoryByCheckInTime(DateTime start, DateTime end)
+        {
+            return _dbContext.parking_histories
+                    .Include(p => p.Vehicle)
+                    .Where(p => p.CheckInTime >= start && p.CheckInTime <= end)
+                    .ToList();
+        }
+
+        public List<ParkingHistory> GetParkingHistoryByCheckOutTime(DateTime start, DateTime end)
+        {
+            return _dbContext.parking_histories
+                    .Include(p => p.Vehicle)
+                    .Where(p => p.CheckOutTime >= start && p.CheckOutTime <= end)
+                    .ToList();
+        }
+
         public ParkingHistory GetParkingHistoryById(int id)
         {
             return _dbContext.parking_histories
                     .Include(p => p.Vehicle)
-                    .FirstOrDefault(ph => ph.Id == id);
+                    .FirstOrDefault(p => p.Id == id);
+        }
+
+        public List<ParkingHistory> GetParkingHistoryByVehicleId(int vehicleId)
+        {
+            return _dbContext.parking_histories
+                    .Include(p => p.Vehicle)
+                    .Where(p => p.VehicleId == vehicleId)
+                    .ToList();
         }
 
         public ParkingHistory UpdateParkingHistory(ParkingHistory parkingHistory)

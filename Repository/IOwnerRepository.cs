@@ -11,5 +11,6 @@ namespace ParkingSystemApi.Repository
         Owner DeleteOwner(int id);
         List<Owner> GetOwnerByName(String name);
         List<Owner> GetOwnerByAddress(String address);
+        
     }
 }

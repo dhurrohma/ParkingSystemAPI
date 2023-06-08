@@ -42,6 +42,16 @@ namespace ParkingSystemApi.Repository
                     .ToList();
         }
 
+        public List<Vehicle> GetVehicleByColor(string color)
+        {
+            return _dbContext.vehicles
+                    .Include(v => v.Owner)
+                    .Include(v => v.VehicleType)
+                    .Include(v => v.ParkingHistories)
+                    .Where(v => v.Color.Contains(color))
+                    .ToList();
+        }
+
         public Vehicle GetVehicleById(int id)
         {
             return _dbContext.vehicles
@@ -49,6 +59,46 @@ namespace ParkingSystemApi.Repository
                     .Include(v => v.VehicleType)
                     .Include(v => v.ParkingHistories)
                     .FirstOrDefault(v => v.Id == id);
+        }
+
+        public List<Vehicle> GetVehicleByOwnerId(int ownerId)
+        {
+            return _dbContext.vehicles
+                    .Include(v => v.Owner)
+                    .Include(v => v.VehicleType)
+                    .Include(v => v.ParkingHistories)
+                    .Where(v => v.OwnerId == ownerId)
+                    .ToList();
+        }
+
+        public List<Vehicle> GetVehicleByPlatNumber(string platNumber)
+        {
+            return _dbContext.vehicles
+                    .Include(v => v.Owner)
+                    .Include(v => v.VehicleType)
+                    .Include(v => v.ParkingHistories)
+                    .Where(v => v.PlatNumber.Contains(platNumber))
+                    .ToList();
+        }
+
+        public List<Vehicle> GetVehicleByType(string type)
+        {
+            return _dbContext.vehicles
+                    .Include(v => v.Owner)
+                    .Include(v => v.VehicleType)
+                    .Include(v => v.ParkingHistories)
+                    .Where(v => v.Type.Contains(type))
+                    .ToList();
+        }
+
+        public List<Vehicle> GetVehicleByVehicleTypeId(int vehicleTypeId)
+        {
+            return _dbContext.vehicles
+                    .Include(v => v.Owner)
+                    .Include(v => v.VehicleType)
+                    .Include(v => v.ParkingHistories)
+                    .Where(v => v.VehicleTypeId == vehicleTypeId)
+                    .ToList();
         }
 
         public String UpdateVehicle(int id, Vehicle vehicle)

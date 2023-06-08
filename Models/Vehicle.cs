@@ -9,13 +9,13 @@ namespace ParkingSystemApi.Models
         public int Id { get; set; }
 
         [Required]
-        public string? PlatNumber { get; set; }
+        public string PlatNumber { get; set; }
 
         [Required]
-        public string? Type { get; set; }
+        public string Type { get; set; }
 
         [Required]
-        public string? Color { get; set; }
+        public string Color { get; set; }
 
         [ForeignKey("Owner")]
         public int OwnerId { get; set; }

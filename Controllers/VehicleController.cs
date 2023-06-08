@@ -37,6 +37,61 @@ namespace ParkingSystemApi.Controllers
             return Ok(vehicle);
         }
 
+        [HttpGet("platNumber")]
+        public IActionResult GetVehicleByPlatNumber([FromQuery] String platNumber)
+        {
+            var vehicle = _vehicleService.GetVehicleByPlatNumber(platNumber);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return Ok(vehicle);
+        }
+
+        [HttpGet("type")]
+        public IActionResult GetVehicleByType([FromQuery] String type)
+        {
+            var vehicle = _vehicleService.GetVehicleByType(type);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return Ok(vehicle);
+        }
+
+        [HttpGet("color")]
+        public IActionResult GetVehicleByColor([FromQuery] String color)
+        {
+            var vehicle = _vehicleService.GetVehicleByColor(color);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return Ok(vehicle);
+        }
+
+        [HttpGet("owner/{ownerId}")]
+        public IActionResult GetVehicleByOwner(int ownerId)
+        {
+            var vehicle = _vehicleService.GetVehicleByOwnerId(ownerId);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return Ok(vehicle);
+        }
+
+        [HttpGet("vehicletype/{vehicleTypeId}")]
+        public IActionResult GetVehicleByVehicleType(int vehicleTypeId)
+        {
+            var vehicle = _vehicleService.GetVehicleByVehicleTypeId(vehicleTypeId);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return Ok(vehicle);
+        }
+
         [HttpPost("add")]
         public IActionResult CreateVehicle(Vehicle vehicle)
         {

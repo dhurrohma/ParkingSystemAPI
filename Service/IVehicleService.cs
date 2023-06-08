@@ -9,5 +9,10 @@ namespace ParkingSystemApi.Service
         Vehicle CreateVehicle(Vehicle vehicle);
         String UpdateVehicle(int id, Vehicle vehicle);
         Vehicle DeleteVehicle(int id);
+        List<Vehicle> GetVehicleByPlatNumber(String platNumber);
+        List<Vehicle> GetVehicleByType(String type);
+        List<Vehicle> GetVehicleByColor(String color);
+        List<Vehicle> GetVehicleByOwnerId(int ownerId);
+        List<Vehicle> GetVehicleByVehicleTypeId(int vehicleTypeId);
     }
 }

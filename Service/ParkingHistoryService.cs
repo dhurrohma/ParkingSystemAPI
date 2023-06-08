@@ -28,9 +28,24 @@ namespace ParkingSystemApi.Service
             return _parkingHistoryRepository.GetAllParkingHistories();
         }
 
+        public List<ParkingHistory> GetParkingHistoryByCheckInTime(DateTime start, DateTime end)
+        {
+            return _parkingHistoryRepository.GetParkingHistoryByCheckInTime(start, end);
+        }
+
+        public List<ParkingHistory> GetParkingHistoryByCheckOutTime(DateTime start, DateTime end)
+        {
+            return _parkingHistoryRepository.GetParkingHistoryByCheckOutTime(start, end);
+        }
+
         public ParkingHistory GetParkingHistoryById(int id)
         {
             return _parkingHistoryRepository.GetParkingHistoryById(id);
+        }
+
+        public List<ParkingHistory> GetParkingHistoryByVehicleId(int vehicleId)
+        {
+            return _parkingHistoryRepository.GetParkingHistoryByVehicleId(vehicleId);
         }
 
         public ParkingHistory UpdateParkingHistory(ParkingHistory parkingHistory)
