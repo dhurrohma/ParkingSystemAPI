@@ -10,21 +10,38 @@ namespace ParkingSystemApi.Controllers
     {
         private readonly IParkingHistoryService _parkingHistoryService;
         private readonly IInvoiceService _invoiceService;
+        
         public ParkingController(IParkingHistoryService parkingHistoryService, IInvoiceService invoiceService)
         {
             _parkingHistoryService = parkingHistoryService;
             _invoiceService = invoiceService;
         }
 
+        private int slot = 10;
+
         [HttpPost("checkin/{vehicleId}")]
         public IActionResult CheckIn(int vehicleId)
         {
-            var parkingHistory = new ParkingHistory
+            var existingParkingHistory = _parkingHistoryService.GetParkingHistoryByVehicleId(vehicleId);
+            var stillParking = existingParkingHistory.FirstOrDefault(ph => ph.CheckOutTime == null);
+            if (stillParking != null)
+            {
+                return BadRequest("Failed to check in because the vehicle was parked");
+            }
+            
+            var parkingHistories = _parkingHistoryService.GetAllParkingHistories();
+            int countVehiclesParking = parkingHistories.Count(ph => ph.CheckOutTime == null);
+            if (countVehiclesParking >= slot)
+            {
+                return BadRequest("The parking lot was full");
+            }
+
+            var checkIn = new ParkingHistory
             {
                 VehicleId = vehicleId,
                 CheckInTime = DateTime.UtcNow.AddHours(7)
             };
-            var parking = _parkingHistoryService.CreateParkingHistory(parkingHistory);
+            var parking = _parkingHistoryService.CreateParkingHistory(checkIn);
             return Ok(parking);
         }
 
