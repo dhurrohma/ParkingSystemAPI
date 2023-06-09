@@ -73,12 +73,13 @@ namespace ParkingSystemApi.Controllers
         [HttpPost("checkin")]
         public IActionResult CheckIn(ParkingHistory parkingHistory)
         {
+            parkingHistory.CheckInTime = DateTime.UtcNow.AddHours(7);
             var parking = _parkingHistoryService.CreateParkingHistory(parkingHistory);
             return CreatedAtAction(nameof(GetParkingHistoryById), new { id = parking.Id }, parking);
         }
 
         [HttpPut("checkout/{id}")]
-        public IActionResult UpdateParkingHistory(int id, [FromBody] ParkingHistory updatedParkingHistory)
+        public IActionResult UpdateParkingHistory(int id)
         {
             ParkingHistory parkingHistory = _parkingHistoryService.GetParkingHistoryById(id);
             if (parkingHistory == null)
@@ -86,7 +87,7 @@ namespace ParkingSystemApi.Controllers
                 return NotFound();
             }
 
-            parkingHistory.CheckOutTime = updatedParkingHistory.CheckOutTime;
+            parkingHistory.CheckOutTime = DateTime.UtcNow.AddHours(7);
 
             var updatedHistory = _parkingHistoryService.UpdateParkingHistory(parkingHistory);
 

@@ -13,9 +13,8 @@ namespace ParkingSystemApi.Models
         public int VehicleId { get; set; }
         public Vehicle? Vehicle { get; set; }
 
-        [Required]
         [DataType(DataType.DateTime)]
-        public DateTime CheckInTime { get; set; }
+        public DateTime? CheckInTime { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime? CheckOutTime { get; set; }
