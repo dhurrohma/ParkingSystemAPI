@@ -5,7 +5,7 @@ using ParkingSystemApi.Service;
 namespace ParkingSystemApi.Controllers
 {
     [ApiController]
-    [Route("api/parking")]
+    [Route("api/parking-histories")]
     public class ParkingHistoryController : ControllerBase
     {
         private readonly IParkingHistoryService _parkingHistoryService;
@@ -70,35 +70,6 @@ namespace ParkingSystemApi.Controllers
             return Ok(parkingHistories);
         }
 
-        [HttpPost("checkin")]
-        public IActionResult CheckIn(ParkingHistory parkingHistory)
-        {
-            parkingHistory.CheckInTime = DateTime.UtcNow.AddHours(7);
-            var parking = _parkingHistoryService.CreateParkingHistory(parkingHistory);
-            return CreatedAtAction(nameof(GetParkingHistoryById), new { id = parking.Id }, parking);
-        }
-
-        [HttpPut("checkout/{id}")]
-        public IActionResult UpdateParkingHistory(int id)
-        {
-            ParkingHistory parkingHistory = _parkingHistoryService.GetParkingHistoryById(id);
-            if (parkingHistory == null)
-            {
-                return NotFound();
-            }
-
-            parkingHistory.CheckOutTime = DateTime.UtcNow.AddHours(7);
-
-            var updatedHistory = _parkingHistoryService.UpdateParkingHistory(parkingHistory);
-
-            if (updatedHistory == null)
-            {
-                return BadRequest();
-            }
-
-            return Ok(updatedHistory);
-        }
-
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteParkingHistory(int id)
         {
@@ -108,7 +79,7 @@ namespace ParkingSystemApi.Controllers
                 return NotFound();
             }
 
-            return Ok(deletedParkingHistory);
+            return Ok($"Parking history {id} was successfully deleted");
         }
     }
 }

@@ -9,6 +9,7 @@ namespace ParkingSystemApi.Data
         public DbSet<Owner> owners { get; set; }
         public DbSet<ParkingHistory> parking_histories { get; set; }
         public DbSet<VehicleType> vehicle_types { get; set; }
+        public DbSet<Invoice> invoices { get; set; }
 
         public ParkingDbContext(DbContextOptions<ParkingDbContext> options)
             : base(options)
@@ -51,6 +52,12 @@ namespace ParkingSystemApi.Data
                 .WithOne(v => v.VehicleType)
                 .HasForeignKey(v => v.VehicleTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Invoice>()
+                .HasOne(i => i.ParkingHistory)
+                .WithMany()
+                .HasForeignKey(i => i.ParkingHistoryId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

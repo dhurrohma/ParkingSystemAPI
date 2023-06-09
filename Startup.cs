@@ -36,11 +36,13 @@ namespace ParkingSystemApi
             services.AddScoped<IVehicleTypeRepository, VehicleTypeRepository>();
             services.AddScoped<IOwnerRepository, OwnerRepository>();
             services.AddScoped<IParkingHistoryRepository, ParkingHistoryRepository>();
+            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IVehicleTypeService, VehicleTypeService>();
             services.AddScoped<IOwnerService, OwnerService>();
             services.AddScoped<IParkingHistoryService, ParkingHistoryService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
 
         }
 
